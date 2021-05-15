@@ -6,7 +6,6 @@ import { UploadProgress } from './upload-progress/upload-progress';
 import { TUploadedFileInfo, useUpload } from './use-upload';
 
 export const UploadPage = () => {
-    
 
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
     const [uploadStatus, setUploadStatus] = useState(UploadStatus.IDLE);

@@ -11,6 +11,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { UploadPage } from './components/pages/upload-page';
 import { VerticalSpacer } from './components/ui/spacer';
 import { Footer } from './components/ui/footer';
+import { DownloadPage } from './components/pages/download/download-page';
 
 export const App = () => {
     const title = useSelector<TRootState, string>(x => x.resources.title);
@@ -27,6 +28,9 @@ export const App = () => {
                 <Switch>
                     <Route exact path="/">
                         <UploadPage />
+                    </Route>
+                    <Route path="/decrypt">
+                        <DownloadPage />
                     </Route>
                 </Switch>
             </BrowserRouter>

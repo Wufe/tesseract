@@ -56,7 +56,11 @@ export const useUpload = () => {
 
         form.append('original-mime', mime);
         form.append('filename', file.name);
+        form.append('size', `${file.size}`);
+        form.append('encoded-bytes', `${encodedBlob.size}`);
         form.append('file', encodedBlob, file.name);
+
+        console.log({ encodedBlobSize: encodedBlob.size });
 
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener('progress', ({ loaded, total}) => {
