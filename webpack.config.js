@@ -3,6 +3,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const WebpackBar = require('webpackbar');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -20,7 +21,7 @@ module.exports = [
         },
         devtool: 'source-map',
         resolve: {
-            extensions: ['.ts', '.tsx'],
+            extensions: ['.ts', '.tsx', '.hbs'],
             plugins: [new TsconfigPathsPlugin({ configFile: path.resolve(__dirname, 'tsconfig.json') })]
         },
         module: {
@@ -41,6 +42,10 @@ module.exports = [
         },
         target: 'web',
         plugins: [
+            new HtmlWebpackPlugin({
+                filename: './index.html',
+                template: './src/frontend/index.hbs',
+            }),
             new WebpackBar({ name: 'Frontend', }),
             new CleanWebpackPlugin(),
             new ForkTsCheckerWebpackPlugin({
