@@ -1,7 +1,7 @@
 export const useBlobEncoder = () => {
 
     const encode = async (blob: Blob, passphrase: string): Promise<Blob> => {
-        const plainTextBytes = new Uint8Array(await blob.arrayBuffer());
+        const plainBlobBytes = new Uint8Array(await blob.arrayBuffer());
         const pbkdf2Iterations = 10000;
         const passphraseBytes = new TextEncoder().encode(passphrase);
         const pbkdf2Salt = window.crypto.getRandomValues(new Uint8Array(8));
@@ -13,7 +13,7 @@ export const useBlobEncoder = () => {
 
         const key = await window.crypto.subtle.importKey('raw', keyBytes, { name: 'AES-CBC', length: 256 }, false, ['encrypt']);
 
-        const cipherBytes = new Uint8Array(await window.crypto.subtle.encrypt({ name: 'AES-CBC', iv: ivBytes }, key, plainTextBytes));
+        const cipherBytes = new Uint8Array(await window.crypto.subtle.encrypt({ name: 'AES-CBC', iv: ivBytes }, key, plainBlobBytes));
 
         const resultBytes = new Uint8Array(cipherBytes.length + 16);
         resultBytes.set(new TextEncoder().encode('Salted__'));

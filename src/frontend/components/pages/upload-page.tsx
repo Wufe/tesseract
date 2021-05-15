@@ -1,33 +1,42 @@
-import { TRootState } from '@/frontend/state/reducers/root-reducer';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { DropZone } from '../drop-zone';
-import { Button } from '../ui/button';
-import { ButtonsContainer } from '../ui/drop-page/buttons-container';
-import { Footer } from '../ui/footer';
-import { PageSubtitle } from '../ui/page/page-subtitle';
-import { VerticalSpacer } from '../ui/spacer';
-import { useUpload } from './use-upload';
+import React, { useCallback, useEffect, useState } from 'react';
+import { EncodingProgress } from './encoding-progress/encoding-progress';
+import { FileSelection } from './file-selection/file-selection';
+import { UploadProgress } from './upload-progress/upload-progress';
+import { TUploadedFileInfo, useUpload } from './use-upload';
 
 export const UploadPage = () => {
-
-    const subtitle = useSelector<TRootState, string>(x => x.resources.subtitle);
-    const footer = useSelector<TRootState, string>(x => x.resources.footer);
+    
 
     const [ selectedFile, setSelectedFile ] = useState<File | null>(null);
+    const [uploadStatus, setUploadStatus] = useState(UploadStatus.IDLE);
+    const [uploadedFileInfo, setUploadedFileInfo] = useState<TUploadedFileInfo | null>(null);
+    const [ progress, setProgress ] = useState(0); /* Range: 0-1 */
     const { uploadFile, abortUpload } = useUpload();
 
-    const onUploadClick = async (event: React.MouseEvent) => {
+    const onUploadClick = useCallback(async (event: React.MouseEvent) => {
         event.preventDefault();
         try {
-            await uploadFile(selectedFile);
+            const result = await uploadFile(
+                selectedFile,
+                () => setUploadStatus(UploadStatus.ENCODING),
+                ({ loaded, total }) => {
+                    setUploadStatus(UploadStatus.UPLOADING);
+                    const progress = +(loaded / total).toFixed(2);
+                    setProgress(progress);
+                }
+            );
+            setUploadedFileInfo(result);
+            setUploadStatus(UploadStatus.COMPLETED);
         } catch (e) {
             console.error(e);
+            setUploadStatus(UploadStatus.FAILED);
+        } finally {
+            
         }
-    };
+    }, [selectedFile]);
 
     const onFileSelected = (file: File) => {
+        setProgress(0);
         setSelectedFile(file);
     };
 
@@ -37,19 +46,18 @@ export const UploadPage = () => {
     }, []);
 
     return <>
-        <PageSubtitle>{subtitle}</PageSubtitle>
-        <VerticalSpacer space={3} />
-        <DropZone onFileSelected={onFileSelected} />
-        <VerticalSpacer space={3} />
-        <ButtonsContainer>
-            <Button>
-                <a href="#" onClick={onUploadClick}>Encrypt and upload</a>
-            </Button>
-            <Button secondary>
-                <Link to="/decrypt">Download and decrypt</Link>
-            </Button>
-        </ButtonsContainer>
-        <VerticalSpacer space={8} /> {/* Footer spacing */}
-        <Footer>{footer}</Footer>
-    </>
+        {uploadStatus === UploadStatus.IDLE && <FileSelection
+            onFileSelected={onFileSelected}
+            onUploadClick={onUploadClick} />}
+        {uploadStatus === UploadStatus.ENCODING && <EncodingProgress />}
+        {uploadStatus === UploadStatus.UPLOADING && <UploadProgress progress={progress} />}
+    </>;
+}
+
+enum UploadStatus {
+    IDLE      = 'idle',
+    ENCODING  = 'encoding',
+    UPLOADING = 'uploaded',
+    COMPLETED = 'completed',
+    FAILED    = 'failed',
 }

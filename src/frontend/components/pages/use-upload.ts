@@ -17,7 +17,11 @@ export const useUpload = () => {
         uploadXhrRef.current = null;
     }
 
-    const uploadFile = async (file: File): Promise<TUploadResult> => {
+    const uploadFile = async (
+        file: File,
+        onEncodingStarted?: () => void,
+        onProgress?: ({ loaded, total }: { loaded: number, total: number }) => void,
+    ): Promise<TUploadResult> => {
         if (!file)
             return; /* No file selected */
         if (busy.current)
@@ -27,9 +31,10 @@ export const useUpload = () => {
 
         // Generating random key
         const key = generateKey();
-        console.log('started encoding');
 
         // Encoding the file
+        if (onEncodingStarted)
+            onEncodingStarted();
         let encodedBlob: Blob;
         try {
             encodedBlob = await encode(file, key);
@@ -37,38 +42,37 @@ export const useUpload = () => {
             busy.current = false;
             return Promise.reject(e);
         }
-        
-        console.log('finished encoding');
+
+        // Binary if browser does not recognize mime type
+        const mime = file.type || 'binary';
 
         // Uploading the chunk
         const form = new FormData();
-        form.append('original-mime', file.type || 'binary' /* Binary if browser does not recognize mime type */);
+        form.append('original-mime', mime);
+        form.append('filename', file.name);
         form.append('file', encodedBlob, file.name);
 
         const xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener('progress', ({ lengthComputable, loaded, total}) => {
-            // TODO:
-            console.log({ loaded, total });
+        xhr.upload.addEventListener('progress', ({ loaded, total}) => {
+            if (onProgress)
+                onProgress({ loaded, total });
         });
         xhr.open('POST', `/v1/files`, true);
 
-        console.log('upload started');
         return new Promise<TUploadResult>((resolve, reject) => {
-            xhr.onloadend = () => {
+            xhr.onloadend = ({ loaded, total }) => {
+                if (onProgress)
+                    onProgress({ loaded, total });
                 resolve({
-                    resultType: UploadResultType.SUCCESS,
                     key,
+                    name: file.name,
+                    mime,
                 });
                 busy.current = false;
-                console.log('upload finished successfully')
             }
             xhr.onerror = e => {
-                resolve({
-                    resultType: UploadResultType.FAILURE,
-                    reason: `Network error`
-                });
+                reject(`Network error`);
                 busy.current = false;
-                console.log('upload finished with error');
             }
             xhr.send(form);
         })
@@ -78,14 +82,10 @@ export const useUpload = () => {
     return { uploadFile, abortUpload };
 }
 
-export enum UploadResultType {
-    SUCCESS = 'success',
-    FAILURE = 'failure',
+export type TUploadResult = TUploadedFileInfo;
+
+export type TUploadedFileInfo = {
+    key : string;
+    name: string;
+    mime: string;
 }
-export type TUploadResult = {
-    resultType: UploadResultType.SUCCESS;
-    key: string;
-} | {
-    resultType: UploadResultType.FAILURE;
-    reason: string;
-};

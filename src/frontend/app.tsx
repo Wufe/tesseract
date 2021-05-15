@@ -9,10 +9,13 @@ import { PageBody } from './components/ui/page/page-body';
 import { PageTitle } from './components/ui/page/page-title';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { UploadPage } from './components/pages/upload-page';
+import { VerticalSpacer } from './components/ui/spacer';
+import { Footer } from './components/ui/footer';
 
 export const App = () => {
-
     const title = useSelector<TRootState, string>(x => x.resources.title);
+    const footer = useSelector<TRootState, string>(x => x.resources.footer);
+
     return <Layout>
         <Header>
             <Logo  />
@@ -28,7 +31,8 @@ export const App = () => {
                 </Switch>
             </BrowserRouter>
 
-            
+            <VerticalSpacer space={8} /> {/* Footer spacing */}
+            <Footer>{footer}</Footer>
         </PageBody>
     </Layout>;
 }
