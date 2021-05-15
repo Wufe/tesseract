@@ -1,25 +1,18 @@
-import { Action } from "redux";
+import { Action, combineReducers } from "redux";
+import { initialResourcesState, resourcesReducer, TResourcesState } from "./resources-reducer";
 
 export type TRootState = {
-    initialized: boolean;
+    resources: TResourcesState;
 };
 export const initialRootState: TRootState = {
-    initialized: false,
+    resources: initialResourcesState,
 };
 
-export enum RootAction {
-    START = '@@root/start',
-}
-
-export const rootReducer = (state: TRootState = initialRootState, action: TActionWithPayload<RootAction, unknown>): TRootState => {
-    switch (action.type) {
-        case RootAction.START:
-            return { ...state, initialized: true };
-    }
-    return state;
-}
+export const rootReducer = combineReducers({
+    resources: resourcesReducer
+});
 
 
-type TActionWithPayload<TType extends string, TPayload extends any> = Action<TType> & {
+export type TActionWithPayload<TType extends string, TPayload extends any> = Action<TType> & {
     payload?: TPayload;
 }
