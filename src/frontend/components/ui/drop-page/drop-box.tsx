@@ -12,6 +12,7 @@ export const OuterDropDiv = styled(FlexCol)`
 `;
 
 export const InnerDropDiv = styled.div`
+    cursor: pointer;
     background: rgba(22, 22, 22, .16);
     border: 1px dashed #363636;
     flex-grow: 1;

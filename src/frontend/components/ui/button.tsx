@@ -19,6 +19,10 @@ export const Button = styled.div<TButtonProps>`
             if (props.secondary)
                 return `#0065FF`;
             return `#009EFF`;
-        }}
+        }};
+
+        &:hover {
+            opacity: .8;
+        }
     }
 `;
