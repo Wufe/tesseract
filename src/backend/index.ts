@@ -6,7 +6,7 @@ import { initStaticController } from './controllers/static-controller';
 import { initUploadController } from './controllers/upload-controller';
 
 const app = Fastify();
-app.register(FastifyMultipart)
+app.register(FastifyMultipart);
 
 initStaticController(app);
 initUploadController(app);

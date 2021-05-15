@@ -21,7 +21,7 @@ module.exports = [
         },
         devtool: 'source-map',
         resolve: {
-            extensions: ['.ts', '.tsx', '.hbs'],
+            extensions: ['.ts', '.tsx', '.hbs', '.js', '.jsx'],
             plugins: [new TsconfigPathsPlugin({ configFile: path.resolve(__dirname, 'tsconfig.json') })]
         },
         module: {
