@@ -8,7 +8,7 @@ import { Logo } from './components/ui/logo';
 import { PageBody } from './components/ui/page/page-body';
 import { PageTitle } from './components/ui/page/page-title';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { DropPage } from './components/pages/drop-page';
+import { UploadPage } from './components/pages/upload-page';
 
 export const App = () => {
 
@@ -23,7 +23,7 @@ export const App = () => {
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/">
-                        <DropPage />
+                        <UploadPage />
                     </Route>
                 </Switch>
             </BrowserRouter>
