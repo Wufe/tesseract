@@ -11,7 +11,7 @@ const pump = promisify(pipeline);
 const outputFolder = 'output';
 
 export const initUploadController: TController = app => {
-    app.post(`/v1/files`, async function (req, reply) {
+    app.post(`/api/v1/files`, async function (req, reply) {
         // Retrieve the file
         const data = await req.file();
         const mimeField = data.fields['original-mime'];

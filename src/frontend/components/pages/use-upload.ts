@@ -48,6 +48,12 @@ export const useUpload = () => {
 
         // Uploading the chunk
         const form = new FormData();
+
+        console.log({
+            filename: file.name,
+            mime,
+        })
+
         form.append('original-mime', mime);
         form.append('filename', file.name);
         form.append('file', encodedBlob, file.name);
@@ -57,7 +63,7 @@ export const useUpload = () => {
             if (onProgress)
                 onProgress({ loaded, total });
         });
-        xhr.open('POST', `/v1/files`, true);
+        xhr.open('POST', `/api/v1/files`, true);
 
         return new Promise<TUploadResult>((resolve, reject) => {
             xhr.onreadystatechange = () => {
