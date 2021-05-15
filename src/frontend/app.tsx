@@ -22,10 +22,7 @@ export const App = () => {
 
     return <Layout>
         <Header>
-            <Logo
-                src="https://via.placeholder.com/108x40?text=LOGO"
-                width="108"
-                height="40" />
+            <Logo  />
         </Header>
         <PageBody>
             <PageTitle>{title}</PageTitle>

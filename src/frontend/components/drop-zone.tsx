@@ -29,7 +29,7 @@ export const DropZone = ({ children }: React.PropsWithChildren<{}>) => {
                     </div>
                 </DropFileSelector>
                 <input {...getInputProps()} />
-                <VerticalSpacer space={1} />
+                <VerticalSpacer space={1.5} />
                 <span>or drop files here</span>
             </>
             {children}
