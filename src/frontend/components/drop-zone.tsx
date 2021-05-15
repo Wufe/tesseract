@@ -12,7 +12,7 @@ export const DropZone = ({ children }: React.PropsWithChildren<{}>) => {
     const fileSelectorText = useSelector<TRootState, string>(x => x.resources.fileSelector);
 
     const onDrop = useCallback(acceptedFiles => {
-
+        console.log('here')
     }, []);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 

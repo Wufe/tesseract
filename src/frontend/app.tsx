@@ -12,11 +12,13 @@ import { PageTitle } from './components/ui/page/page-title';
 import { PageSubtitle } from './components/ui/page/page-subtitle';
 import { DropZone } from './components/drop-zone';
 import { VerticalSpacer } from './components/ui/spacer';
+import { Footer } from './components/ui/footer';
 
 export const App = () => {
 
     const title = useSelector<TRootState, string>(x => x.resources.title);
     const subtitle = useSelector<TRootState, string>(x => x.resources.subtitle);
+    const footer = useSelector<TRootState, string>(x => x.resources.footer);
 
     return <Layout>
         <Header>
@@ -30,6 +32,8 @@ export const App = () => {
             <PageSubtitle>{subtitle}</PageSubtitle>
             <VerticalSpacer space={3} />
             <DropZone></DropZone>
+            <VerticalSpacer space={8} /> {/* Footer spacing */}
+            <Footer>{footer}</Footer>
         </PageBody>
     </Layout>;
 }
