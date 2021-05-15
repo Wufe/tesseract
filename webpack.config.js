@@ -14,7 +14,7 @@ module.exports = [
     env => ({
         mode,
         name: 'frontend',
-        entry: './src/frontend/index.ts',
+        entry: './src/frontend/index.tsx',
         output: {
             filename: 'frontend.js',
             path: path.resolve(__dirname, 'public')
@@ -55,7 +55,7 @@ module.exports = [
                 logger: { issues: 'webpack-infrastructure' }
             }),
         ],
-        stats: 'none',
+        stats: 'errors-only',
     }),
     env => ({
         mode,
@@ -98,6 +98,6 @@ module.exports = [
                 logger: { issues: 'webpack-infrastructure' }
             }),
         ],
-        stats: 'none',
+        stats: 'errors-only',
     })
 ]
