@@ -34,6 +34,6 @@ export const initUploadController: TController = app => {
             mode: 0o666
         }));
 
-        reply.send({ filename, mime });
+        reply.send({ uuid: filename, mime });
     })
 }

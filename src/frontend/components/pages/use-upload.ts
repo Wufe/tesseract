@@ -30,7 +30,7 @@ export const useUpload = () => {
         busy.current = true;
 
         // Generating random key
-        const key = generateKey();
+        const key = await generateKey();
 
         // Encoding the file
         if (onEncodingStarted)
@@ -60,15 +60,24 @@ export const useUpload = () => {
         xhr.open('POST', `/v1/files`, true);
 
         return new Promise<TUploadResult>((resolve, reject) => {
-            xhr.onloadend = ({ loaded, total }) => {
-                if (onProgress)
-                    onProgress({ loaded, total });
-                resolve({
-                    key,
-                    name: file.name,
-                    mime,
-                });
-                busy.current = false;
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.responseText);
+                    try {
+                        const {uuid} = JSON.parse(xhr.responseText);
+                        resolve({
+                            uuid,
+                            key,
+                            name: file.name,
+                            mime,
+                        });
+                    } catch {
+                        // Could not parse response. Malformed output
+                        reject('Malformed server response')
+                    }
+                    
+                    busy.current = false;
+                }
             }
             xhr.onerror = e => {
                 reject(`Network error`);
@@ -85,6 +94,7 @@ export const useUpload = () => {
 export type TUploadResult = TUploadedFileInfo;
 
 export type TUploadedFileInfo = {
+    uuid: string;
     key : string;
     name: string;
     mime: string;

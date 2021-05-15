@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { EncodingProgress } from './encoding-progress/encoding-progress';
 import { FileSelection } from './file-selection/file-selection';
+import { FileUploaded } from './file-uploaded/file-uploaded';
 import { UploadProgress } from './upload-progress/upload-progress';
 import { TUploadedFileInfo, useUpload } from './use-upload';
 
@@ -51,13 +52,14 @@ export const UploadPage = () => {
             onUploadClick={onUploadClick} />}
         {uploadStatus === UploadStatus.ENCODING && <EncodingProgress />}
         {uploadStatus === UploadStatus.UPLOADING && <UploadProgress progress={progress} />}
+        {uploadStatus === UploadStatus.COMPLETED && <FileUploaded fileInfo={uploadedFileInfo} />}
     </>;
 }
 
 enum UploadStatus {
     IDLE      = 'idle',
     ENCODING  = 'encoding',
-    UPLOADING = 'uploaded',
+    UPLOADING = 'uploading',
     COMPLETED = 'completed',
     FAILED    = 'failed',
 }
