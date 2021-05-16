@@ -15,3 +15,5 @@
 or 
 
 - `docker-compose up`
+
+Then navigate to `http://localhost:3999`

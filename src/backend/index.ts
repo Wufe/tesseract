@@ -23,7 +23,7 @@ initDownloadController(app, {
     storeService
 });
 
-app.listen(3000, '0.0.0.0', err => {
+app.listen(3999, '0.0.0.0', err => {
     if (err) throw err;
     console.log(`Server listening on ${(app.server.address() as any).port}`);
 })
