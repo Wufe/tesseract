@@ -65,8 +65,8 @@ export const useFileDownload = () => {
         document.body.appendChild(downloadAnchor);
         downloadAnchor.href = blobUrl;
         downloadAnchor.download = file.name;
+        downloadAnchor.target = '_blank';
         downloadAnchor.click();
-        document.body.removeChild(downloadAnchor);
     };
 
     return { downloadFile };
