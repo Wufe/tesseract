@@ -47,11 +47,11 @@ export const internationalizationReducer: Reducer<TInternationalizationState> = 
             let cipherFunction: (message: string) => string;
             if (language === Language.ENCRYPTED) {
                 if (state.currentLanguage === Language.ENCRYPTED)
-                    return;
+                    return state;
                 cipherFunction = encryptWithKey;
             } else if (language === Language.ENGLISH) {
                 if (state.currentLanguage === Language.ENGLISH)
-                    return;
+                    return state;
                 cipherFunction = decryptWithKey;
             }
             return {
