@@ -58,34 +58,26 @@ export const useFileDownload = () => {
 
         if (onLog)
             onLog('passphrase check passed');
-        const blob = new Blob([plaintextBytes], {type: 'application/download'});
+        const blob = new Blob([plaintextBytes], {type: file.mime});
         const blobUrl = URL.createObjectURL(blob);
 
         if (onLog)
             onLog('creating anchor');
 
-        const downloadReader = new FileReader();
-        downloadReader.onload = function() {
-            window.location.href = downloadReader.result as string;
-            if (onLog)
-                onLog('onload fired');
-        }
-        downloadReader.readAsDataURL(blob);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.hidden = true;
+        downloadAnchor.style.position = 'absolute';
+        downloadAnchor.style.left = '-9999px';
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.href = blobUrl;
+        downloadAnchor.download = file.name;
+        downloadAnchor.target = '_blank';
+        downloadAnchor.click();
+        document.body.removeChild(downloadAnchor);
+        URL.revokeObjectURL(blobUrl);
+
         if (onLog)
-            onLog('reading blob as data url');
-
-        // const downloadAnchor = document.createElement('a');
-        // downloadAnchor.hidden = true;
-        // downloadAnchor.style.position = 'absolute';
-        // downloadAnchor.style.left = '-9999px';
-        // document.body.appendChild(downloadAnchor);
-        // downloadAnchor.href = blobUrl;
-        // downloadAnchor.download = file.name;
-        // downloadAnchor.target = '_blank';
-        // downloadAnchor.click();
-
-        // if (onLog)
-        //     onLog('clicking anchor');
+            onLog('clicking anchor');
     };
 
     return { downloadFile };
