@@ -7,6 +7,8 @@ import { Button } from '@/frontend/components/ui/button';
 import { UploadedFileIcon } from '@/frontend/components/ui/icons/uploaded-file-icon';
 import { useClipboard } from './use-clibpoard';
 import { Filename } from '@/frontend/components/ui/file-name';
+import { useMediaQuery } from 'react-responsive';
+import { CopyIcon } from '@/frontend/components/ui/icons/copy-icon';
 
 type TProps = {
     fileInfo: TUploadedFileInfo;
@@ -14,6 +16,7 @@ type TProps = {
 export const FileUploaded = ({fileInfo}: TProps) => {
 
     const clipboardCopy = useClipboard();
+    const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
 
     return <>
         <Card>
@@ -28,22 +31,36 @@ export const FileUploaded = ({fileInfo}: TProps) => {
         <VerticalSpacer space={1} />
         <TextBox>
             <span>{fileInfo.uuid}</span>
+            {!isMobile && <Button className="btn" width={`7.25rem`} height={`2.25rem`}
+                onClick={() => clipboardCopy(fileInfo.uuid)}>
+                <div>Copy</div>
+            </Button>}
+        </TextBox>
+        {isMobile && <>
+            <VerticalSpacer space={1} />
             <Button className="btn" width={`7.25rem`} height={`2.25rem`}
                 onClick={() => clipboardCopy(fileInfo.uuid)}>
                 <div>Copy</div>
             </Button>
-        </TextBox>
-        <VerticalSpacer space={3} />
+        </>}
+        <VerticalSpacer space={isMobile ? 2 : 3} />
         <span>
             Your encryption key:
         </span>
         <VerticalSpacer space={1} />
         <TextBox>
             <span>{fileInfo.key}</span>
+            {!isMobile && <Button className="btn" width={`7.25rem`} height={`2.25rem`}
+                onClick={() => clipboardCopy(fileInfo.key)}>
+                <div>Copy</div>
+            </Button>}
+        </TextBox>
+        {isMobile && <>
+            <VerticalSpacer space={1} />
             <Button className="btn" width={`7.25rem`} height={`2.25rem`}
                 onClick={() => clipboardCopy(fileInfo.key)}>
                 <div>Copy</div>
             </Button>
-        </TextBox>
+        </>}
     </>
 }

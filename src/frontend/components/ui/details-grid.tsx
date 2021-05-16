@@ -6,8 +6,16 @@ export const DetailsGrid = styled.div`
     grid-template-rows: auto;
     align-items: center;
     grid-gap: 13px;
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
 `;
 
 export const DetailLabel = styled.span`
     text-align: right;
+
+    @media (max-width: 480px) {
+        text-align: left;
+    }
 `;
