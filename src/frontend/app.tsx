@@ -8,7 +8,7 @@ import { Logo } from './components/ui/logo';
 import { PageBody } from './components/ui/page/page-body';
 import { PageTitle } from './components/ui/page/page-title';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { UploadPage } from './components/pages/upload-page';
+import { UploadPage } from './components/pages/upload/upload-page';
 import { VerticalSpacer } from './components/ui/spacer';
 import { Footer } from './components/ui/footer';
 import { DownloadPage } from './components/pages/download/download-page';

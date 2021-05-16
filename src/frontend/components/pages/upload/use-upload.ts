@@ -49,18 +49,11 @@ export const useUpload = () => {
         // Uploading the chunk
         const form = new FormData();
 
-        console.log({
-            filename: file.name,
-            mime,
-        })
-
         form.append('original-mime', mime);
         form.append('filename', file.name);
         form.append('size', `${file.size}`);
         form.append('encoded-bytes', `${encodedBlob.size}`);
         form.append('file', encodedBlob, file.name);
-
-        console.log({ encodedBlobSize: encodedBlob.size });
 
         const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener('progress', ({ loaded, total}) => {
@@ -72,7 +65,6 @@ export const useUpload = () => {
         return new Promise<TUploadResult>((resolve, reject) => {
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    console.log(xhr.responseText);
                     try {
                         const {uuid} = JSON.parse(xhr.responseText);
                         resolve({

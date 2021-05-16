@@ -2,12 +2,12 @@ import { TRootState } from '@/frontend/state/reducers/root-reducer';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DropZone } from '../../drop-zone';
-import { Button } from '../../ui/button';
-import { ButtonsContainer } from '../../ui/drop-page/buttons-container';
-import { Footer } from '../../ui/footer';
-import { PageSubtitle } from '../../ui/page/page-subtitle';
-import { VerticalSpacer } from '../../ui/spacer';
+import { DropZone } from '@/frontend/components/drop-zone';
+import { Button } from '@/frontend/components/ui/button';
+import { ButtonsContainer } from '@/frontend/components/ui/drop-page/buttons-container';
+import { Footer } from '@/frontend/components/ui/footer';
+import { PageSubtitle } from '@/frontend/components/ui/page/page-subtitle';
+import { VerticalSpacer } from '@/frontend/components/ui/spacer';
 
 type TProps = {
     onFileSelected: (file: File) => void;

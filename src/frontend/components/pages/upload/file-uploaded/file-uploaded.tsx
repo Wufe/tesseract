@@ -1,10 +1,10 @@
 import React from 'react';
 import { TUploadedFileInfo } from '../use-upload';
 import { Card } from '@/frontend/components/ui/card';
-import { VerticalSpacer } from '../../ui/spacer';
-import { TextBox } from '../../ui/text-box';
-import { Button } from '../../ui/button';
-import { UploadedFileIcon } from '../../ui/icons/uploaded-file-icon';
+import { VerticalSpacer } from '@/frontend/components/ui/spacer';
+import { TextBox } from '@/frontend/components/ui/text-box';
+import { Button } from '@/frontend/components/ui/button';
+import { UploadedFileIcon } from '@/frontend/components/ui/icons/uploaded-file-icon';
 import { useClipboard } from './use-clibpoard';
 
 type TProps = {

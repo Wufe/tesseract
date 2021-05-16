@@ -1,7 +1,7 @@
 import React from 'react';
-import { PageActionTitle } from '../../ui/page/page-action-title';
-import { ProgressBar } from '../../ui/progress-bar';
-import { VerticalSpacer } from '../../ui/spacer';
+import { PageActionTitle } from '@/frontend/components/ui/page/page-action-title';
+import { ProgressBar } from '@/frontend/components/ui/progress-bar';
+import { VerticalSpacer } from '@/frontend/components/ui/spacer';
 
 type TProps = {
     progress: number; /* Range 0.1 */
