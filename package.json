@@ -5,9 +5,11 @@
   "author": "Simone Bembi <simone.bembi@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "run-p server:monitor build:watch",
+    "dev": "run-p server:monitor build:watch start:db",
     "server:monitor": "cross-env DB_HOST=127.0.0.1 nodemon ./dist/backend.js",
-    "build:watch": "webpack --watch"
+    "build:watch": "webpack --watch",
+    "build:prod": "cross-env NODE_ENV=production webpack",
+    "start:db": "docker-compose up -d database pma"
   },
   "devDependencies": {
     "@types/busboy": "^0.2.3",
