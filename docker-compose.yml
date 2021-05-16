@@ -29,7 +29,7 @@ services:
     environment:
       - PMA_HOST=database
     ports:
-      - 127.0.0.1:8007:80
+      - 127.0.0.1:8009:80
     depends_on:
       - database
     links:
