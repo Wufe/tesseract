@@ -29,7 +29,7 @@ export const FileInfo = ({file, onKeySelected}: TProps) => {
         <VerticalSpacer space={2.5} />
         <span>Insert your encryption key:</span>
         <VerticalSpacer space={1} />
-        <TextInput width={`430px`} value={key} onChange={e => setKey(e.target.value)} />
+        <TextInput width={`380px`} value={key} onChange={e => setKey(e.target.value)} />
         <VerticalSpacer space={2} />
         <Button tertiary width={`216px`} onClick={() => onKeySelected(key)}>
             <div>Decrypt and download</div>

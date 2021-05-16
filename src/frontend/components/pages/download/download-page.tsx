@@ -6,6 +6,7 @@ import { VerticalSpacer } from '../../ui/spacer';
 import { TextInput } from '../../ui/text-input';
 import { DecodingProgress } from './decoding-progress/decoding-progress';
 import { DownloadProgress } from './download-progress/download-progress';
+import { DownloadReady } from './download-ready';
 import { FileInfo } from './file-info/file-info';
 import { InsertUUID } from './insert-uuid/insert-uuid';
 import { useBlobDownload } from './use-blob-download';
@@ -20,7 +21,6 @@ export const DownloadPage = ({}: TProps) => {
     const [progress, setProgress] = useState(0); /* Range 0-1 */
     const {loading, retrieveFile} = useFileRetrieval();
     const {downloadFile} = useFileDownload();
-    const { downloadBlob } = useBlobDownload();
     const [blob, setBlob] = useState<Blob | null>(null);
 
     const onUUIDSelected = async (uuid: string) => {
@@ -39,7 +39,7 @@ export const DownloadPage = ({}: TProps) => {
                 key,
                 blob => {
                     setBlob(blob);
-                    setDownloadStatus(DownloadStatus.READY_TO_DOWNLOAD);
+                    setDownloadStatus(DownloadStatus.READY);
                 },
                 ({ loaded, total }) => {
                     setDownloadStatus(DownloadStatus.DOWNLOADING);
@@ -55,23 +55,13 @@ export const DownloadPage = ({}: TProps) => {
             setDownloadStatus(DownloadStatus.IDLE);
         }
     }
-
-    const onDownloadClick = () => {
-        downloadBlob(blob, file.name);
-    }
     
     return <>
         {downloadStatus === DownloadStatus.IDLE && <InsertUUID onUUIDSelected={onUUIDSelected} disabled={loading} />}
         {downloadStatus === DownloadStatus.FILE_INFO && <FileInfo file={file} onKeySelected={onKeySelected} />}
         {downloadStatus === DownloadStatus.DOWNLOADING && <DownloadProgress progress={progress * 100} />}
         {downloadStatus === DownloadStatus.DECODING && <DecodingProgress />}
-        {downloadStatus === DownloadStatus.READY_TO_DOWNLOAD && <>
-            <PageActionTitle>Ready!</PageActionTitle>
-            <VerticalSpacer space={3} />
-            <Button tertiary onClick={onDownloadClick} width={`240px`}>
-                <span>Download</span>
-            </Button>
-        </>}
+        {downloadStatus === DownloadStatus.READY && <DownloadReady blob={blob} file={file} />}
     </>
 }
 
@@ -80,5 +70,5 @@ enum DownloadStatus {
     FILE_INFO = 'file-info',
     DOWNLOADING = 'downloading',
     DECODING = 'decoding',
-    READY_TO_DOWNLOAD = 'ready-to-download'
+    READY = 'ready'
 }
