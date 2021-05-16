@@ -18,6 +18,7 @@ export const DownloadPage = ({}: TProps) => {
     const [progress, setProgress] = useState(0); /* Range 0-1 */
     const {loading, retrieveFile} = useFileRetrieval();
     const {downloadFile} = useFileDownload();
+    const [logs, setLogs] = useState<string[]>([]);
 
     const onUUIDSelected = async (uuid: string) => {
         if (!uuid?.trim()) return;
@@ -40,6 +41,9 @@ export const DownloadPage = ({}: TProps) => {
                 },
                 () => {
                     setDownloadStatus(DownloadStatus.DECODING);
+                },
+                log => {
+                    setLogs(logs => [...logs, log]);
                 }
             );
         } catch (e) {
@@ -49,6 +53,7 @@ export const DownloadPage = ({}: TProps) => {
     }
     
     return <>
+        {logs.map((l, i) => <div key={i}>{l}</div>)}
         {downloadStatus === DownloadStatus.IDLE && <InsertUUID onUUIDSelected={onUUIDSelected} disabled={loading} />}
         {downloadStatus === DownloadStatus.FILE_INFO && <FileInfo file={file} onKeySelected={onKeySelected} />}
         {downloadStatus === DownloadStatus.DOWNLOADING && <DownloadProgress progress={progress * 100} />}

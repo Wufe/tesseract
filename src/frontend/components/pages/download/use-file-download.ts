@@ -5,7 +5,8 @@ export const useFileDownload = () => {
         file: TFile,
         passhphrase: string,
         onProgress?: ({ loaded, total }: { loaded: number, total: number }) => void,
-        onDecodingStarted?: () => void
+        onDecodingStarted?: () => void,
+        onLog?: (log: string) => void
     ) => {
         const response = await fetch(`/api/v1/file/${file.uuid}/download`)
         const reader = response.body.getReader();
@@ -55,8 +56,13 @@ export const useFileDownload = () => {
             throw new Error(`Wrong passphrase`);
         }
 
+        if (onLog)
+            onLog('passphrase check passed');
         const blob = new Blob([plaintextBytes], {type: 'application/download'});
         const blobUrl = URL.createObjectURL(blob);
+
+        if (onLog)
+            onLog('creating anchor');
 
         const downloadAnchor = document.createElement('a');
         downloadAnchor.hidden = true;
@@ -67,6 +73,9 @@ export const useFileDownload = () => {
         downloadAnchor.download = file.name;
         downloadAnchor.target = '_blank';
         downloadAnchor.click();
+
+        if (onLog)
+            onLog('clicking anchor');
     };
 
     return { downloadFile };
