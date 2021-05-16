@@ -1,15 +1,15 @@
 import { Action, combineReducers } from "redux";
-import { initialResourcesState, resourcesReducer, TResourcesState } from "./resources-reducer";
+import { initialInternationalizationState, internationalizationReducer, TInternationalizationState } from "./i18n-reducer";
 
 export type TRootState = {
-    resources: TResourcesState;
+    i18n: TInternationalizationState;
 };
 export const initialRootState: TRootState = {
-    resources: initialResourcesState,
+    i18n: initialInternationalizationState,
 };
 
 export const rootReducer = combineReducers({
-    resources: resourcesReducer
+    i18n: internationalizationReducer
 });
 
 

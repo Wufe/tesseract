@@ -14,7 +14,7 @@ type TProps = {
     onUploadClick: (event: React.MouseEvent) => void;
 }
 export const FileSelection = ({ onFileSelected, onUploadClick }: React.PropsWithChildren<TProps>) => {
-    const subtitle = useSelector<TRootState, string>(x => x.resources.subtitle);
+    const subtitle = useSelector<TRootState, string>(x => x.i18n.resources.subtitle);
 
     return <>
         <PageSubtitle>{subtitle}</PageSubtitle>

@@ -46,11 +46,6 @@ export const DownloadPage = ({}: TProps) => {
             alert(e);
         }
     }
-
-    // TODO: Remove this
-    useEffect(() => {
-        onUUIDSelected('3f165750-b597-11eb-9262-2b94a8b17a67');
-    }, [])
     
     return <>
         {downloadStatus === DownloadStatus.IDLE && <InsertUUID onUUIDSelected={onUUIDSelected} disabled={loading} />}

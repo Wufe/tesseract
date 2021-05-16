@@ -13,7 +13,7 @@ type TProps = {
 }
 export const DropZone = ({ children, onFileSelected }: React.PropsWithChildren<TProps>) => {
 
-    const fileSelectorText = useSelector<TRootState, string>(x => x.resources.fileSelector);
+    const fileSelectorText = useSelector<TRootState, string>(x => x.i18n.resources.chooseFile);
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 

@@ -12,14 +12,17 @@ import { UploadPage } from './components/pages/upload/upload-page';
 import { VerticalSpacer } from './components/ui/spacer';
 import { Footer } from './components/ui/footer';
 import { DownloadPage } from './components/pages/download/download-page';
+import { LanguageSwitcherInner, LanguageSwitcherOuter } from './components/ui/language-switcher';
+import { I18nSwitch } from './components/i18n-switch';
 
 export const App = () => {
-    const title = useSelector<TRootState, string>(x => x.resources.title);
-    const footer = useSelector<TRootState, string>(x => x.resources.footer);
+    const title = useSelector<TRootState, string>(x => x.i18n.resources.title);
+    const footer = useSelector<TRootState, string>(x => x.i18n.resources.footer);
 
     return <Layout>
         <Header>
             <Logo  />
+            <I18nSwitch />
         </Header>
         <PageBody>
             <PageTitle>{title}</PageTitle>
