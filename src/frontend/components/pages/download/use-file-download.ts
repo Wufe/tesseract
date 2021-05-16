@@ -64,18 +64,28 @@ export const useFileDownload = () => {
         if (onLog)
             onLog('creating anchor');
 
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.hidden = true;
-        downloadAnchor.style.position = 'absolute';
-        downloadAnchor.style.left = '-9999px';
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.href = blobUrl;
-        downloadAnchor.download = file.name;
-        downloadAnchor.target = '_blank';
-        downloadAnchor.click();
-
+        const downloadReader = new FileReader();
+        downloadReader.onload = function() {
+            window.location.href = downloadReader.result as string;
+            if (onLog)
+                onLog('onload fired');
+        }
+        downloadReader.readAsDataURL(blob);
         if (onLog)
-            onLog('clicking anchor');
+            onLog('reading blob as data url');
+
+        // const downloadAnchor = document.createElement('a');
+        // downloadAnchor.hidden = true;
+        // downloadAnchor.style.position = 'absolute';
+        // downloadAnchor.style.left = '-9999px';
+        // document.body.appendChild(downloadAnchor);
+        // downloadAnchor.href = blobUrl;
+        // downloadAnchor.download = file.name;
+        // downloadAnchor.target = '_blank';
+        // downloadAnchor.click();
+
+        // if (onLog)
+        //     onLog('clicking anchor');
     };
 
     return { downloadFile };
