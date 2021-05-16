@@ -16,7 +16,7 @@ module.exports = [
         name: 'frontend',
         entry: './src/frontend/index.tsx',
         output: {
-            filename: 'frontend.js',
+            filename: isDevelopment ? 'frontend.js' : 'frontend.[fullhash].js',
             path: path.resolve(__dirname, 'public')
         },
         devtool: 'source-map',
