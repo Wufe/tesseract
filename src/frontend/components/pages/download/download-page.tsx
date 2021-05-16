@@ -13,8 +13,9 @@ import { useFileRetrieval } from './use-file-retrieval';
 type TProps = {};
 export const DownloadPage = ({}: TProps) => {
 
-    const [status, setStatus] = useState(DownloadStatus.IDLE);
+    const [downloadStatus, setDownloadStatus] = useState(DownloadStatus.IDLE);
     const [file, setFile] = useState<TFile>();
+    const [progress, setProgress] = useState(0); /* Range 0-1 */
     const {loading, retrieveFile} = useFileRetrieval();
     const {downloadFile} = useFileDownload();
 
@@ -23,23 +24,39 @@ export const DownloadPage = ({}: TProps) => {
         const file = await retrieveFile(uuid);
         if (file) {
             setFile(file);
-            setStatus(DownloadStatus.FILE_INFO);
+            setDownloadStatus(DownloadStatus.FILE_INFO);
         }
     }
 
     const onKeySelected = async (key: string) => {
-        await downloadFile(file, key);
+        try {
+            await downloadFile(
+                file,
+                key,
+                ({ loaded, total }) => {
+                    setDownloadStatus(DownloadStatus.DOWNLOADING);
+                    const progress = +(loaded / total).toFixed(2);
+                    setProgress(progress);
+                },
+                () => {
+                    setDownloadStatus(DownloadStatus.DECODING);
+                }
+            );
+        } catch (e) {
+            alert(e);
+        }
     }
 
+    // TODO: Remove this
     useEffect(() => {
-        onUUIDSelected('3f165750-b597-11eb-9262-2b94a8b17a67')
+        onUUIDSelected('3f165750-b597-11eb-9262-2b94a8b17a67');
     }, [])
     
     return <>
-        {status === DownloadStatus.IDLE && <InsertUUID onUUIDSelected={onUUIDSelected} disabled={loading} />}
-        {status === DownloadStatus.FILE_INFO && <FileInfo file={file} onKeySelected={onKeySelected} />}
-        {status === DownloadStatus.DOWNLOADING && <DownloadProgress progress= {100} />}
-        {status === DownloadStatus.DECODING && <DecodingProgress />}
+        {downloadStatus === DownloadStatus.IDLE && <InsertUUID onUUIDSelected={onUUIDSelected} disabled={loading} />}
+        {downloadStatus === DownloadStatus.FILE_INFO && <FileInfo file={file} onKeySelected={onKeySelected} />}
+        {downloadStatus === DownloadStatus.DOWNLOADING && <DownloadProgress progress={progress * 100} />}
+        {downloadStatus === DownloadStatus.DECODING && <DecodingProgress />}
     </>
 }
 
