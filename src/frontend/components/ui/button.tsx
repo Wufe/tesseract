@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TextBox } from "./text-box";
+import { TextBox, TextBoxInner, TextBoxOuter } from "./text-box";
 
 type TProps = {
     secondary?: boolean;
@@ -40,7 +40,7 @@ export const Button = styled.div<TProps>`
             opacity: .8;
         }
 
-        ${TextBox} > & {
+        ${TextBoxOuter} > ${TextBoxInner} > & {
             position: absolute;
             top: 5px;
             right: 6px;

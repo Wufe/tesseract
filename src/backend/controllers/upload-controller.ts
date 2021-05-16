@@ -7,31 +7,41 @@ import { pipeline } from 'stream';
 import { promisify } from 'util';
 import { Multipart, MultipartFile } from "fastify-multipart";
 import prettyBytes from "pretty-bytes";
+import { StoreService } from "../services/store-service";
+import { TFile } from "@/shared/types/file";
 const pump = promisify(pipeline);
 
 const outputFolder = 'output';
 
-export const initUploadController: TController = app => {
+type TDeps = {
+    storeService: StoreService;
+}
+export const initUploadController: TController<TDeps> = (app, {storeService}) => {
     app.post(`/api/v1/files`, async function (req, reply) {
         // Retrieve the file
         const data = await req.file();
 
         const mimeField = data.fields['original-mime'];
         if (!mimeField)
-            return reply.status(400).send(`Mime type not specified.`);
+            return reply.status(400).send(`original-mime not specified.`);
         const mime = (mimeField as unknown as Multipart<string>).value;
 
         const filenameField = data.fields['filename'];
         if (!filenameField)
-            return reply.status(400).send(`Filename not specified.`);
+            return reply.status(400).send(`filename not specified.`);
         const filename = (filenameField as unknown as Multipart<string>).value;
 
         const sizeField = data.fields['size'];
         if (!sizeField)
-            return reply.status(400).send(`Size not specified.`);
+            return reply.status(400).send(`size not specified.`);
         let size = (sizeField as unknown as Multipart<string>).value;
         const originalBytes = +size;
         size = prettyBytes(+size);
+
+        const encodedBytesField = data.fields['encoded-bytes'];
+        if (!filenameField)
+            return reply.status(400).send(`encoded-bytes not specified.`);
+        const encodedBytes = +(encodedBytesField as unknown as Multipart<string>).value;
 
         // Create a new UUID
         const uuid = v1();
@@ -46,9 +56,19 @@ export const initUploadController: TController = app => {
             encoding: null,
             mode: 0o666
         }));
-        console.log({res});
-        const encodedBytes = 0; // TODO
 
-        reply.send({ uuid, mime, size, originalBytes, encodedBytes });
+        const file: TFile = {
+            uuid,
+            mime,
+            name: filename,
+            bytesOriginal: originalBytes,
+            bytesEncoded: encodedBytes,
+            size,
+        };
+
+        // Store file in database
+        await storeService.storeFile(file);
+
+        reply.send(file);
     })
 }

@@ -12,6 +12,7 @@ export const useFileRetrieval = () => {
             setLoading(false);
         } else {
             const file = await response.json();
+            setLoading(false);
             return file;
         }
         return null;

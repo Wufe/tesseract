@@ -1,3 +1,4 @@
+import { TFile } from "@/shared/types/file";
 import { useRef } from "react"
 import { useBlobEncoder } from "./use-blob-encoder";
 import { useKeyGenerator } from "./use-key-generator";
@@ -66,7 +67,7 @@ export const useUpload = () => {
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     try {
-                        const {uuid} = JSON.parse(xhr.responseText);
+                        const {uuid} = JSON.parse(xhr.responseText) as TFile;
                         resolve({
                             uuid,
                             key,

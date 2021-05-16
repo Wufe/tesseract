@@ -44,6 +44,7 @@ export const DownloadPage = ({}: TProps) => {
             );
         } catch (e) {
             alert(e);
+            setDownloadStatus(DownloadStatus.IDLE);
         }
     }
     
