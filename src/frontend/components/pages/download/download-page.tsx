@@ -1,12 +1,14 @@
 import { TFile } from '@/shared/types/file';
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../ui/button';
+import { PageActionTitle } from '../../ui/page/page-action-title';
 import { VerticalSpacer } from '../../ui/spacer';
 import { TextInput } from '../../ui/text-input';
 import { DecodingProgress } from './decoding-progress/decoding-progress';
 import { DownloadProgress } from './download-progress/download-progress';
 import { FileInfo } from './file-info/file-info';
 import { InsertUUID } from './insert-uuid/insert-uuid';
+import { useBlobDownload } from './use-blob-download';
 import { useFileDownload } from './use-file-download';
 import { useFileRetrieval } from './use-file-retrieval';
 
@@ -18,7 +20,8 @@ export const DownloadPage = ({}: TProps) => {
     const [progress, setProgress] = useState(0); /* Range 0-1 */
     const {loading, retrieveFile} = useFileRetrieval();
     const {downloadFile} = useFileDownload();
-    const [logs, setLogs] = useState<string[]>([]);
+    const { downloadBlob } = useBlobDownload();
+    const [blob, setBlob] = useState<Blob | null>(null);
 
     const onUUIDSelected = async (uuid: string) => {
         if (!uuid?.trim()) return;
@@ -34,6 +37,10 @@ export const DownloadPage = ({}: TProps) => {
             await downloadFile(
                 file,
                 key,
+                blob => {
+                    setBlob(blob);
+                    setDownloadStatus(DownloadStatus.READY_TO_DOWNLOAD);
+                },
                 ({ loaded, total }) => {
                     setDownloadStatus(DownloadStatus.DOWNLOADING);
                     const progress = +(loaded / total).toFixed(2);
@@ -41,9 +48,6 @@ export const DownloadPage = ({}: TProps) => {
                 },
                 () => {
                     setDownloadStatus(DownloadStatus.DECODING);
-                },
-                log => {
-                    setLogs(logs => [...logs, log]);
                 }
             );
         } catch (e) {
@@ -51,13 +55,23 @@ export const DownloadPage = ({}: TProps) => {
             setDownloadStatus(DownloadStatus.IDLE);
         }
     }
+
+    const onDownloadClick = () => {
+        downloadBlob(blob, file.name);
+    }
     
     return <>
-        {logs.map((l, i) => <div key={i}>{l}</div>)}
         {downloadStatus === DownloadStatus.IDLE && <InsertUUID onUUIDSelected={onUUIDSelected} disabled={loading} />}
         {downloadStatus === DownloadStatus.FILE_INFO && <FileInfo file={file} onKeySelected={onKeySelected} />}
         {downloadStatus === DownloadStatus.DOWNLOADING && <DownloadProgress progress={progress * 100} />}
         {downloadStatus === DownloadStatus.DECODING && <DecodingProgress />}
+        {downloadStatus === DownloadStatus.READY_TO_DOWNLOAD && <>
+            <PageActionTitle>Ready!</PageActionTitle>
+            <VerticalSpacer space={3} />
+            <Button onClick={onDownloadClick} width={`240px`}>
+                <span>Download</span>
+            </Button>
+        </>}
     </>
 }
 
@@ -66,4 +80,5 @@ enum DownloadStatus {
     FILE_INFO = 'file-info',
     DOWNLOADING = 'downloading',
     DECODING = 'decoding',
+    READY_TO_DOWNLOAD = 'ready-to-download'
 }
