@@ -6,6 +6,7 @@ import { TextBox } from '@/frontend/components/ui/text-box';
 import { Button } from '@/frontend/components/ui/button';
 import { UploadedFileIcon } from '@/frontend/components/ui/icons/uploaded-file-icon';
 import { useClipboard } from './use-clibpoard';
+import { Filename } from '@/frontend/components/ui/file-name';
 
 type TProps = {
     fileInfo: TUploadedFileInfo;
@@ -18,7 +19,7 @@ export const FileUploaded = ({fileInfo}: TProps) => {
         <Card>
             <UploadedFileIcon />
             <VerticalSpacer space={1} />
-            <span>{fileInfo.name}</span>
+            <Filename>{fileInfo.name}</Filename>
         </Card>
         <VerticalSpacer space={3} />
         <span>
