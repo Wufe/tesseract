@@ -8,7 +8,7 @@ type TProps = {
 }
 export const DownloadProgress = ({ progress }: React.PropsWithChildren<TProps>) => {
     return <>
-        <PageActionTitle>Download in progress ..</PageActionTitle>
+        <PageActionTitle>Downloading ..</PageActionTitle>
         <VerticalSpacer space={3} />
         <ProgressBar percentage={progress * 100} />
     </>;

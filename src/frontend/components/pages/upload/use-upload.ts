@@ -44,8 +44,8 @@ export const useUpload = () => {
             return Promise.reject(e);
         }
 
-        // Binary if browser does not recognize mime type
-        const mime = file.type || 'binary';
+        // application/download if browser does not recognize mime type
+        const mime = file.type || 'application/download';
 
         // Uploading the chunk
         const form = new FormData();

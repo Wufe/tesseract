@@ -1,12 +1,15 @@
 import { TFile } from '@/shared/types/file';
 import React, { useEffect, useState } from 'react';
 import { Button } from '../../ui/button';
+import { PageActionTitle } from '../../ui/page/page-action-title';
 import { VerticalSpacer } from '../../ui/spacer';
 import { TextInput } from '../../ui/text-input';
 import { DecodingProgress } from './decoding-progress/decoding-progress';
 import { DownloadProgress } from './download-progress/download-progress';
+import { DownloadReady } from './download-ready';
 import { FileInfo } from './file-info/file-info';
 import { InsertUUID } from './insert-uuid/insert-uuid';
+import { useBlobDownload } from './use-blob-download';
 import { useFileDownload } from './use-file-download';
 import { useFileRetrieval } from './use-file-retrieval';
 
@@ -18,6 +21,7 @@ export const DownloadPage = ({}: TProps) => {
     const [progress, setProgress] = useState(0); /* Range 0-1 */
     const {loading, retrieveFile} = useFileRetrieval();
     const {downloadFile} = useFileDownload();
+    const [blob, setBlob] = useState<Blob | null>(null);
 
     const onUUIDSelected = async (uuid: string) => {
         if (!uuid?.trim()) return;
@@ -33,6 +37,10 @@ export const DownloadPage = ({}: TProps) => {
             await downloadFile(
                 file,
                 key,
+                blob => {
+                    setBlob(blob);
+                    setDownloadStatus(DownloadStatus.READY);
+                },
                 ({ loaded, total }) => {
                     setDownloadStatus(DownloadStatus.DOWNLOADING);
                     const progress = +(loaded / total).toFixed(2);
@@ -53,6 +61,7 @@ export const DownloadPage = ({}: TProps) => {
         {downloadStatus === DownloadStatus.FILE_INFO && <FileInfo file={file} onKeySelected={onKeySelected} />}
         {downloadStatus === DownloadStatus.DOWNLOADING && <DownloadProgress progress={progress * 100} />}
         {downloadStatus === DownloadStatus.DECODING && <DecodingProgress />}
+        {downloadStatus === DownloadStatus.READY && <DownloadReady blob={blob} file={file} />}
     </>
 }
 
@@ -61,4 +70,5 @@ enum DownloadStatus {
     FILE_INFO = 'file-info',
     DOWNLOADING = 'downloading',
     DECODING = 'decoding',
+    READY = 'ready'
 }

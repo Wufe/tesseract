@@ -4,6 +4,7 @@ export const useFileDownload = () => {
     const downloadFile = async (
         file: TFile,
         passhphrase: string,
+        onDownloadReady: (blob: Blob) => void,
         onProgress?: ({ loaded, total }: { loaded: number, total: number }) => void,
         onDecodingStarted?: () => void
     ) => {
@@ -54,19 +55,9 @@ export const useFileDownload = () => {
         } catch {
             throw new Error(`Wrong passphrase`);
         }
-
-        const blob = new Blob([plaintextBytes], {type: 'application/download'});
-        const blobUrl = URL.createObjectURL(blob);
-
-        const downloadAnchor = document.createElement('a');
-        downloadAnchor.hidden = true;
-        downloadAnchor.style.position = 'absolute';
-        downloadAnchor.style.left = '-9999px';
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.href = blobUrl;
-        downloadAnchor.download = file.name;
-        downloadAnchor.target = '_blank';
-        downloadAnchor.click();
+        
+        const blob = new Blob([plaintextBytes], {type: file.mime});
+        onDownloadReady(blob);
     };
 
     return { downloadFile };
