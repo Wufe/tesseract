@@ -15,6 +15,7 @@ export const UploadPage = () => {
 
     const onUploadClick = useCallback(async (event: React.MouseEvent) => {
         event.preventDefault();
+        if (!selectedFile) return;
         try {
             const result = await uploadFile(
                 selectedFile,
