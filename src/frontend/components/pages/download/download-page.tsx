@@ -68,7 +68,7 @@ export const DownloadPage = ({}: TProps) => {
         {downloadStatus === DownloadStatus.READY_TO_DOWNLOAD && <>
             <PageActionTitle>Ready!</PageActionTitle>
             <VerticalSpacer space={3} />
-            <Button onClick={onDownloadClick} width={`240px`}>
+            <Button tertiary onClick={onDownloadClick} width={`240px`}>
                 <span>Download</span>
             </Button>
         </>}
